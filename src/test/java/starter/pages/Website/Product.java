@@ -89,7 +89,7 @@ public class Product{
 
     @Step("admin set the PUT api endpoint Product")
     public String adminSetThePUTApiEndpointProduct(){
-        return endpoint + "/produk/57";
+        return endpoint + "/produk/59";
     }
     @Step("admin sent HTTP PUT request get Product by ID")
     public void adminSentHTTPPUTRequestGetProductByID(){
@@ -109,7 +109,7 @@ public class Product{
 
     @Step("I set Delete api endpoints delete product")
     public String setApiEndpointDeleteProduct() {
-        return endpoint + "/produk/58";
+        return endpoint + "/produk/59";
     }
 
     @Step("I send Delete HTTP request Delete Product")
