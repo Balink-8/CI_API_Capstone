@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>As admin, ensures that new event can be added correctly</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff"><link rel="stylesheet" href="bootstrap-icons/font/bootstrap-icons.css"><!-- JQuery -->
+<script type="text/javascript" src="scripts/jquery-1.11.1.min.js"></script><!-- Required Stylesheets -->
+<link href="bootstrap-treeview/dist/bootstrap-treeview.min.css" rel="stylesheet">
+
+<!-- Required Javascript -->
+<script src="bootstrap-treeview/dist/bootstrap-treeview.min.js"></script><!-- DataTables -->
+<link type="text/css" href="datatables/1.13.1/datatables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="datatables/1.13.1/datatables.min.js"></script>
+<script type="text/javascript" src="datatables/1.13.1/time-elapsed-dhms.js"></script>
+
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+<script>
+    jQuery.fn.dataTable.ext.type.order['time-elapsed-dhms-pre'] = function(data) {
+
+        var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
+        var multipliers = {
+            ms: 1,
+            s: 1000,
+            m: 60000,
+            h: 3600000,
+            d: 86400000
+        };
+
+        if (matches) {
+            var multiplier = multipliers[matches[2].toLowerCase()];
+            return parseFloat(matches[1]) * multiplier;
+        } else {
+            return -1;
+        };
+    };
+</script>
+<link rel="stylesheet" href="css/core.css"/>
+<link rel="stylesheet" href="css/link.css"/>
+<link type="text/css" media="screen" href="css/screen.css" rel="Stylesheet"/>
+<!--CHART.JS-->
+<script src="chartjs/chart.js"></script>
+<script src="chartjs/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="chartjs/patternomaly.min.js"></script>
+<script>
+    // Register the plugin to all charts:
+    Chart.register(ChartDataLabels);
+</script>
+<!-- JQuery-UI -->
+<link type="text/css" href="jqueryui/1.11.2-start/jquery-ui.min.css" rel="Stylesheet" />
+<script type="text/javascript" src="jqueryui/1.11.2-start/jquery-ui.min.js"></script><!-- DataTables -->
+<link type="text/css" href="datatables/1.13.1/datatables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="datatables/1.13.1/datatables.min.js"></script>
+<script type="text/javascript" src="datatables/1.13.1/time-elapsed-dhms.js"></script>
+
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+<script>
+    jQuery.fn.dataTable.ext.type.order['time-elapsed-dhms-pre'] = function(data) {
+
+        var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
+        var multipliers = {
+            ms: 1,
+            s: 1000,
+            m: 60000,
+            h: 3600000,
+            d: 86400000
+        };
+
+        if (matches) {
+            var multiplier = multipliers[matches[2].toLowerCase()];
+            return parseFloat(matches[1]) * multiplier;
+        } else {
+            return -1;
+        };
+    };
+</script>
+<!-- ImgPreview -->
+<script src="scripts/imgpreview.full.jquery.js" type="text/javascript"></script>
+</head>
+
+<body class="results-page">
+
+
+<div id="topheader">
+    <div id="topbanner">
+        <div id="logo"><a href="index.html"><img src="images/serenity-logo.png" border="0"/></a></div>
+        <div id="projectname-banner" style="float:right">
+            <span class="projectname">
+                <span class="projecttitle">Serenity BDD Report</span>
+                <span class="projectsubtitle"></span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="middlecontent">
+    <div id="contenttop">
+        <div class="middlebg">
+        <span class="breadcrumbs">
+            <a href="index.html" class="breadcrumbs">Home</a>
+
+        > As admin, ensures that new event can be added correctly
+        </span>
+        </div>
+        <div class="rightbg"></div>
+    </div>
+
+    <div class="clr"></div>
+
+    <!--/* starts second table*/-->
+<div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#"><i class="bi bi-journal-check"></i> Overall Test Results</a>
+        </li>
+        <li >
+            <a href="capabilities.html"><i class="bi bi-journal-text"></i> Requirements</a>
+        </li>
+    </ul>
+    <span class="date-and-time"><a href="build-info.html"><i class="bi bi-info-circle"></i></a> Report generated 26-06-2023 11:50</span>
+    <br style="clear:left"/>
+</div>
+    <div class="clr"></div>
+
+
+    <div id="contentbody">
+        <div class="titlebar">
+            <div class="story-title">
+                <table class="outcome-header">
+                    <tr>
+                        <td>
+                                <div>
+                                    <h3 class="discreet-story-header">
+                                        <i class="fs-2 bi bi-chat-left-quote large-icon"></i>
+                                        <span class="story-header-title">As Admin, I Want To Manage The Event Feature</span>
+                                    </h3>
+                                </div>
+
+                        </td>
+                        <td valign="top">
+                            <p class="tag">
+                                    <span class="badge example-tag tag-badge" style="background:default;">
+                                    <i class="bi bi-tag-fill"></i>&nbsp;<a class="tagLink" style="background:default;"
+                                                                      href="ace4dc333d2a9a016eee7fc38d51b2d22887f81bf9e2ddf465d63cd8798144db.html">TCPROFILE02
+                                    (tag)</a>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="story-title">
+                <table class="outcome-header">
+                    <tr>
+                        <td colspan="2" class="test-title-bar">
+                            <span class="outcome-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon fa-2x' title='SUCCESS'></i></a></span>
+                            <span class="test-case-title">
+                                <span class="success-color">
+                                    As admin, ensures that new event can be added correctly
+                                        <span class="related-issue-title"></span>
+                                </span>
+                            </span>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+
+</div>
+</div>
+
+<div class="clr"></div>
+
+
+<div id="beforetable"></div>
+
+
+<div id="tablecontents">
+    <div>
+        <table class="step-table">
+            <tr class="step-titles">
+                <th width="65">
+                </th>
+                <th class="step-description-column greentext">
+                    Steps
+                </th>
+
+                <th width="130" class="greentext">Outcome</th>
+                <th width="100" class="greentext"><i title="Duration" class="bi bi-stopwatch"></i></th>
+            </tr>
+            <tr class="step-table-separator">
+                <td colspan="5"></td>
+            </tr>
+
+                <tr class="test-SUCCESS">
+
+                    <td width="50" class="step-icon">
+                        <a name="0"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection0')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection0 success-icon"
+                                   style="margin-left: 20px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection0')"
+                               style="display:block;">
+                                <span class="top-level-step">
+                                                Given admin set up api endpoint login in profile admin
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="top-level-step">SUCCESS</span></td>
+                    <td width="100"><span class="top-level-step">001ms</span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection0" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="70" class="step-icon">
+                        <a name="0-0"></a>
+                            <span style="margin-left: 40px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                admin set up api endpoint login in profile admin
+                                        </span>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                <tr class="test-SUCCESS">
+
+                    <td width="50" class="step-icon">
+                        <a name="1"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection1')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection1 success-icon"
+                                   style="margin-left: 20px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection1')"
+                               style="display:block;">
+                                <span class="top-level-step">
+                                                When admin send a HTTP request login in profile admin
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="top-level-step">SUCCESS</span></td>
+                    <td width="100"><span class="top-level-step">122ms</span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection1" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="70" class="step-icon">
+                        <a name="1-0"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection1-0')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection1-0 success-icon"
+                                   style="margin-left: 40px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection1-0')"
+                               style="display:block;">
+                                <span class="nested-step">
+                                                admin send a HTTP request login in profile admin
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-step">121ms</span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection1-0" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="90" class="step-icon">
+                        <a name="1-0-0"></a>
+                            <span style="margin-left: 60px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                admin set up api endpoint login in profile admin
+                                        </span>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+                <tr class="test-SUCCESS">
+
+                    <td width="90" class="step-icon">
+                        <a name="1-0-1"></a>
+                            <span style="margin-left: 60px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                POST http://167.172.66.247:8002/admin_login
+                                        </span>
+                            <span class="evidence">
+                                        <span class="piece-of-evidence">
+                <span>
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="collapse"
+                                data-target="#restModal-REST-6">
+                            REST Query
+                        </button>
+                    </span>
+                <!-- Modal -->
+                <div class="rest-query-details">
+                    <div class="collapse multi-collapse" id="restModal-REST-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Response</h4>
+                                    <p>URL: http://167.172.66.247:8002/admin_login</p>
+                                    <p>Status code: 200</p>
+                                    <p>Content Type: application/json</p>
+                                    <h4>Request Headers</h4>
+                                    <pre>Accept=*/*<br>Content-Type=application/json</pre>
+                                    <h4>Content Body</h4>
+                                    <pre>{<br>    &quot;password&quot;: &quot;123456&quot;,<br>    &quot;email&quot;: &quot;BalinkBarong@gmail.com&quot;<br>}</pre>
+                                    <h4>Response Headers</h4>
+                                    <pre>Content-Type: application/json; charset=UTF-8<br>Vary: Origin<br>Date: Mon, 26 Jun 2023 04:50:53 GMT<br>Content-Length: 851</pre>
+                                <h4>Response Body</h4>
+                                    <pre>{<br>    &quot;data&quot;: {<br>        &quot;profile_perusahaan&quot;: {<br>            &quot;ID&quot;: 1,<br>            &quot;CreatedAt&quot;: &quot;0001-01-01T00:00:00Z&quot;,<br>            &quot;UpdatedAt&quot;: &quot;2023-06-25T16:52:02.995Z&quot;,<br>            &quot;DeletedAt&quot;: null,<br>            &quot;nama&quot;: &quot;Sean 1&quot;,<br>            &quot;deskripsi&quot;: &quot;lorem ipsum&quot;,<br>            &quot;foto_profile&quot;: &quot;123&quot;,<br>            &quot;email&quot;: &quot;BalinkBarong@gmail.com&quot;,<br>            &quot;password&quot;: &quot;123456&quot;,<br>            &quot;no_telepon&quot;: &quot;0811111111111&quot;,<br>            &quot;whatsapp&quot;: &quot;0811111111111&quot;,<br>            &quot;instagram&quot;: &quot;@balink&quot;,<br>            &quot;facebook&quot;: &quot;balink&quot;,<br>            &quot;alamat&quot;: &quot;Kecamatan Kuta, Sebelah Selata Kota Denpasar, Bali&quot;,<br>            &quot;negara&quot;: &quot;Indonesia&quot;,<br>            &quot;kode_pos&quot;: &quot;16442&quot;,<br>            &quot;rekening_bca&quot;: &quot;0&quot;,<br>            &quot;rekening_mandiri&quot;: &quot;12345678910&quot;,<br>            &quot;rekening_bri&quot;: &quot;12345678910&quot;,<br>            &quot;rekening_bni&quot;: &quot;12345678910&quot;,<br>            &quot;rekening_btn&quot;: &quot;12345678910&quot;,<br>            &quot;rekening_seabank&quot;: &quot;0&quot;,<br>            &quot;rekening_bpd_bali&quot;: &quot;12345678910&quot;<br>        },<br>        &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODc3NzMwNTMsImlkIjoxLCJpc3MiOiJxd2VydHkiLCJuYW1lIjoiU2VhbiAxIn0.QcwuOWTQKbj-0Vbmz9NknYsBJ4DSvddss-5JGJprjes&quot;<br>    },<br>    &quot;message&quot;: &quot;Login success&quot;,<br>    &quot;status&quot;: true<br>}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                        </span>
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                <tr class="test-SUCCESS">
+
+                    <td width="50" class="step-icon">
+                        <a name="2"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection2')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection2 success-icon"
+                                   style="margin-left: 20px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection2')"
+                               style="display:block;">
+                                <span class="top-level-step">
+                                                And admin set the PUT api endpoint profile admin
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="top-level-step">SUCCESS</span></td>
+                    <td width="100"><span class="top-level-step"></span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection2" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="70" class="step-icon">
+                        <a name="2-0"></a>
+                            <span style="margin-left: 40px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                admin set the PUT api endpoint profile admin
+                                        </span>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                <tr class="test-SUCCESS">
+
+                    <td width="50" class="step-icon">
+                        <a name="3"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection3')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection3 success-icon"
+                                   style="margin-left: 20px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection3')"
+                               style="display:block;">
+                                <span class="top-level-step">
+                                                And admin sent HTTP PUT request post profile admin
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="top-level-step">SUCCESS</span></td>
+                    <td width="100"><span class="top-level-step">110ms</span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection3" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="70" class="step-icon">
+                        <a name="3-0"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection3-0')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection3-0 success-icon"
+                                   style="margin-left: 40px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection3-0')"
+                               style="display:block;">
+                                <span class="nested-step">
+                                                admin sent HTTP PUT request post profile admin
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-step">109ms</span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection3-0" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="90" class="step-icon">
+                        <a name="3-0-0"></a>
+                            <span style="margin-left: 60px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                admin set the PUT api endpoint profile admin
+                                        </span>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+                <tr class="test-SUCCESS">
+
+                    <td width="90" class="step-icon">
+                        <a name="3-0-1"></a>
+                            <span style="margin-left: 60px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                PUT http://167.172.66.247:8002/admin
+                                        </span>
+                            <span class="evidence">
+                                        <span class="piece-of-evidence">
+                <span>
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="collapse"
+                                data-target="#restModal-REST-12">
+                            REST Query
+                        </button>
+                    </span>
+                <!-- Modal -->
+                <div class="rest-query-details">
+                    <div class="collapse multi-collapse" id="restModal-REST-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Response</h4>
+                                    <p>URL: http://167.172.66.247:8002/admin</p>
+                                    <p>Status code: 400</p>
+                                    <p>Content Type: application/json</p>
+                                    <h4>Request Headers</h4>
+                                    <pre>Accept=*/*<br>Content-Type=application/json</pre>
+                                    <h4>Content Body</h4>
+                                    <pre>[<br>    {<br>        &quot;password&quot;: &quot;123456&quot;,<br>        &quot;nama&quot;: &quot;Sean 2&quot;,<br>        &quot;foto_profile&quot;: &quot;123&quot;,<br>        &quot;email&quot;: &quot;BalinkBarong@gmail.com&quot;,<br>        &quot;no_telepon&quot;: &quot;0811111111111&quot;,<br>        &quot;alamat&quot;: &quot;Jl. 123&quot;<br>    }<br>]</pre>
+                                    <h4>Response Headers</h4>
+                                    <pre>Content-Type: application/json; charset=UTF-8<br>Vary: Origin<br>Date: Mon, 26 Jun 2023 04:50:53 GMT<br>Content-Length: 39</pre>
+                                <h4>Response Body</h4>
+                                    <pre>{<br>    &quot;message&quot;: &quot;missing or malformed jwt&quot;<br>}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                        </span>
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                <tr class="test-SUCCESS">
+
+                    <td width="50" class="step-icon">
+                        <a name="4"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection4')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection4 success-icon"
+                                   style="margin-left: 20px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection4')"
+                               style="display:block;">
+                                <span class="top-level-step">
+                                                Then admin receive a valid login and profile admin HTTP response code 200
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="top-level-step">SUCCESS</span></td>
+                    <td width="100"><span class="top-level-step">141ms</span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection4" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="70" class="step-icon">
+                        <a name="4-0"></a>
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection4-0')"
+                               style="display:block">
+                                <i class="bi bi-plus-square imgstepSection4-0 success-icon"
+                                   style="margin-left: 40px; float:left; padding-right:5px"></i>
+                            </a>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                            <a href="javaScript:void(0)" onClick="toggleDiv('stepSection4-0')"
+                               style="display:block;">
+                                <span class="nested-step">
+                                                admin receive a valid login and profile admin HTTP response code 200
+                                        </span>
+                            </a>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-step">139ms</span></td>
+                </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table id="stepSection4-0" class="step-table-nested" style="display:none;">
+                <tr class="test-SUCCESS">
+
+                    <td width="90" class="step-icon">
+                        <a name="4-0-0"></a>
+                            <span style="margin-left: 60px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                admin set the GET api endpoint profile admin
+                                        </span>
+                            <span class="evidence">
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+                <tr class="test-SUCCESS">
+
+                    <td width="90" class="step-icon">
+                        <a name="4-0-1"></a>
+                            <span style="margin-left: 60px;"
+                                  class="nested-group-icon"><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                </span>
+                    </td>
+
+                    <td class="step-description-column">
+                        <div class="step-description">
+                                <span class="nested-group-step">
+                                                GET http://167.172.66.247:8002/event?page=1&amp;limit=5&amp;order=desc
+                                        </span>
+                            <span class="evidence">
+                                        <span class="piece-of-evidence">
+                <span>
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="collapse"
+                                data-target="#restModal-REST-16">
+                            REST Query
+                        </button>
+                    </span>
+                <!-- Modal -->
+                <div class="rest-query-details">
+                    <div class="collapse multi-collapse" id="restModal-REST-16">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Response</h4>
+                                    <p>URL: http://167.172.66.247:8002/event?page=1&limit=5&order=desc</p>
+                                    <p>Status code: 200</p>
+                                    <p>Content Type: null</p>
+                                    <h4>Request Headers</h4>
+                                    <pre>Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODc3NzMwNTMsImlkIjoxLCJpc3MiOiJxd2VydHkiLCJuYW1lIjoiU2VhbiAxIn0.QcwuOWTQKbj-0Vbmz9NknYsBJ4DSvddss-5JGJprjes<br>Accept=*/*</pre>
+                                    <h4>Response Headers</h4>
+                                    <pre>Content-Type: application/json; charset=UTF-8<br>Vary: Origin<br>Date: Mon, 26 Jun 2023 04:50:53 GMT<br>Transfer-Encoding: chunked</pre>
+                                <h4>Response Body</h4>
+                                    <pre>{<br>    &quot;data&quot;: {<br>        &quot;data&quot;: [<br>            {<br>                &quot;ID&quot;: 96,<br>                &quot;CreatedAt&quot;: &quot;2023-06-25T12:43:02.762Z&quot;,<br>                &quot;UpdatedAt&quot;: &quot;2023-06-25T13:59:58.989Z&quot;,<br>                &quot;DeletedAt&quot;: null,<br>                &quot;artikel_id&quot;: &quot;94&quot;,<br>                &quot;gambar&quot;: &quot;C:\\fakepath\\wisata.png&quot;,<br>                &quot;nama&quot;: &quot;Wayang Kulit&quot;,<br>                &quot;deskripsi&quot;: &quot;Seni rupa sekaligus pertunjukan terakhir yang harus diikuti adalah pertunjukan wayang kulit. Dengan tokoh yang hampir sama dengan tokoh pewayangan di daerah luar Bali, cerita yang dibawakan oleh dalang sangat beragam. Mulai dari cerita sakral umat Hindu Bali yang hanya dilangsungkan saat upacara keagamaan tertentu saja. Hingga cerita berupa celotehan lucu dan nilai kehidupan ringan yang ditampilkan saat pesta rakyat menjadi daya tarik tersendiri. Seperti halnya yang biasa ditampilkan dalam Pesta Kesenian Bali setiap tahunnya.&quot;,<br>                &quot;harga_tiket&quot;: 50000,<br>                &quot;stok_tiket&quot;: 100,<br>                &quot;waktu_mulai&quot;: &quot;15:00 WITA&quot;,<br>                &quot;waktu_selesai&quot;: &quot;16:00 WITA&quot;,<br>                &quot;tanggal_mulai&quot;: &quot;23 juli 2023 &quot;,<br>                &quot;tanggal_selesai&quot;: &quot;24 Juli 2023&quot;,<br>                &quot;lokasi&quot;: &quot;Ubud, Bali&quot;,<br>                &quot;link_lokasi&quot;: &quot;https://goo.gl/maps/fCBRPeGyGq8uR4yE7&quot;<br>            },<br>            {<br>                &quot;ID&quot;: 95,<br>                &quot;CreatedAt&quot;: &quot;2023-06-25T12:37:12.327Z&quot;,<br>                &quot;UpdatedAt&quot;: &quot;2023-06-25T13:59:47.985Z&quot;,<br>                &quot;DeletedAt&quot;: null,<br>                &quot;artikel_id&quot;: &quot;104&quot;,<br>                &quot;gambar&quot;: &quot;C:\\fakepath\\wisata.png&quot;,<br>                &quot;nama&quot;: &quot;Mekare-Kare&quot;,<br>                &quot;deskripsi&quot;: &quot;Bagi penduduk pria di kawasan Tenganan, Karangasem, Bali, upacara Mekare-Kare adalah ajang untuk menunjukkan kehebatannya. Mereka akan bertarung dan melakukan segala cara untuk memenangkan perang yang senjatanya adalah daun pandan yang memiliki duri tajam. \nMekare-Kare dilakukan setiap tahunnya untuk menghormati Indra yang merupakan dewa perang dalam Hindu. Dengan melakukan upacara ini, semua pria di desa akan dianggap kuat dan mampu melakukan perang. Upacara ini biasanya akan diadakan pada awal Juni setiap tahunnya.\n&quot;,<br>                &quot;harga_tiket&quot;: 0,<br>                &quot;stok_tiket&quot;: 0,<br>                &quot;waktu_mulai&quot;: &quot;16:00 WITA&quot;,<br>                &quot;waktu_selesai&quot;: &quot;17:00 WITA&quot;,<br>                &quot;tanggal_mulai&quot;: &quot;20 Juli 2023&quot;,<br>                &quot;tanggal_selesai&quot;: &quot;20 Juli 2023&quot;,<br>                &quot;lokasi&quot;: &quot;Ubud, Bali&quot;,<br>                &quot;link_lokasi&quot;: &quot;https://goo.gl/maps/fCBRPeGyGq8uR4yE7&quot;<br>            },<br>            {<br>                &quot;ID&quot;: 94,<br>                &quot;CreatedAt&quot;: &quot;2023-06-25T12:36:04.17Z&quot;,<br>                &quot;UpdatedAt&quot;: &quot;2023-06-25T13:59:35.25Z&quot;,<br>                &quot;DeletedAt&quot;: null,<br>                &quot;artikel_id&quot;: &quot;95&quot;,<br>                &quot;gambar&quot;: &quot;C:\\fakepath\\wisata.png&quot;,<br>                &quot;nama&quot;: &quot;Tari Legong&quot;,<br>                &quot;deskripsi&quot;: &quot;Kesenian tradisional Bali berikutnya yang harus disaksikan adalah Tari Legong. Tari Legong dibawakan oleh perempuan dengan gerakan yang terstruktur. Daya tarik utama dari pertunjukan seni ini adalah kesesuaian antara mata dan tangan penari dengan alat musik gamelan yang mengiringinya, yaiti Gamelan Semar Pagulingan. Berasal dari kata “Leg” yang berarti luwes dan “Gong” adalah alat musik yang mengiringinya, tarian ini lebih sering disebut sebagai Tari Bali. Selain gerakannya yang lembut, riasan dan busana tradisional Bali yang cantik akan membuatmu terpana.&quot;,<br>                &quot;harga_tiket&quot;: 90000,<br>                &quot;stok_tiket&quot;: 300,<br>                &quot;waktu_mulai&quot;: &quot;15:00 WITA&quot;,<br>                &quot;waktu_selesai&quot;: &quot;17:00 WITA&quot;,<br>                &quot;tanggal_mulai&quot;: &quot;1 Juli 2023&quot;,<br>                &quot;tanggal_selesai&quot;: &quot;10 Juli 2023&quot;,<br>                &quot;lokasi&quot;: &quot;Ubud, Bali&quot;,<br>                &quot;link_lokasi&quot;: &quot;https://goo.gl/maps/fCBRPeGyGq8uR4yE7&quot;<br>            },<br>            {<br>                &quot;ID&quot;: 93,<br>                &quot;CreatedAt&quot;: &quot;2023-06-25T12:33:59.904Z&quot;,<br>                &quot;UpdatedAt&quot;: &quot;2023-06-25T13:59:22.066Z&quot;,<br>                &quot;DeletedAt&quot;: null,<br>                &quot;artikel_id&quot;: &quot;100&quot;,<br>                &quot;gambar&quot;: &quot;C:\\fakepath\\wisata.png&quot;,<br>                &quot;nama&quot;: &quot;Drama Tari Calonarang&quot;,<br>                &quot;deskripsi&quot;: &quot;Calonarang adalah tokoh utama dalam seni tari ini yang identik dengan wajah seram dan menakutkan. Karena dalam kepercayaan Hindu Bali, Calonarang adalah wujud kekuatan mistis yang nantinya akan diseimbangkan oleh kekuatan ilmu putih. Seni drama tari Calonarang sering dikolaborasikan dengan seni tari lain, seperti drama Gong, tari Barong, dan sebagainya. Pertunjukannya pun tidak bisa di sembarang tempat karena tema horor yang dimilikinya. Jadi seni drama tari Calonarang sangat menarik untuk disaksikan. Bagaimana peperangan antara hal baik dan hal jahat ditunjukkan dalam seni tarian yang indah.&quot;,<br>                &quot;harga_tiket&quot;: 80000,<br>                &quot;stok_tiket&quot;: 150,<br>                &quot;waktu_mulai&quot;: &quot;20:00 WITA&quot;,<br>                &quot;waktu_selesai&quot;: &quot;21:00 WITA&quot;,<br>                &quot;tanggal_mulai&quot;: &quot;15 Juli 2023 &quot;,<br>                &quot;tanggal_selesai&quot;: &quot;20 Juli 2023&quot;,<br>                &quot;lokasi&quot;: &quot;Ubud, Bali&quot;,<br>                &quot;link_lokasi&quot;: &quot;https://goo.gl/maps/fCBRPeGyGq8uR4yE7&quot;<br>            },<br>            {<br>                &quot;ID&quot;: 92,<br>                &quot;CreatedAt&quot;: &quot;2023-06-25T12:32:22.485Z&quot;,<br>                &quot;UpdatedAt&quot;: &quot;2023-06-25T13:59:12.368Z&quot;,<br>                &quot;DeletedAt&quot;: null,<br>                &quot;artikel_id&quot;: &quot;103&quot;,<br>                &quot;gambar&quot;: &quot;C:\\fakepath\\wisata.png&quot;,<br>                &quot;nama&quot;: &quot;Ogoh-ogoh&quot;,<br>                &quot;deskripsi&quot;: &quot;Tradisi ini merupakan salah satu kegiatan budaya yang hampir selalu dilaksanakan penganut agama Hindu di Bali. Mengutip Kadek Winarta dari Universitas Negeri Makassar, Ogoh-ogoh mulanya merupakan tradisi ngelewang oleh kesenian Ndong-nding dari Gianyar dan Karang Asem. Ogoh-ogoh diyakini merupakan perwujudan raja Jaya Pangus dan putri Kang Cing Wei sebagai Barong Landung.\nTradisi Ogoh-ogoh bermakna sebagai keseimbangan antara sisi positif dan negatif dalam diri manusia. Sisi negatif sendiri tidak diharapkan hilang tetapi dipertahankan dengan kadar yang sama dengan sisi positif sehingga sisi negatif akan menjadi netral.\n&quot;,<br>                &quot;harga_tiket&quot;: 0,<br>                &quot;stok_tiket&quot;: 0,<br>                &quot;waktu_mulai&quot;: &quot;20:00 WITA&quot;,<br>                &quot;waktu_selesai&quot;: &quot;23:00 WITA&quot;,<br>                &quot;tanggal_mulai&quot;: &quot;13 Agustus 2023&quot;,<br>                &quot;tanggal_selesai&quot;: &quot;13 Agustus 2023&quot;,<br>                &quot;lokasi&quot;: &quot;Ubud, Bali&quot;,<br>                &quot;link_lokasi&quot;: &quot;https://goo.gl/maps/fCBRPeGyGq8uR4yE7&quot;<br>            }<br>        ],<br>        &quot;data_shown&quot;: 5,<br>        &quot;page&quot;: 1,<br>        &quot;total_data&quot;: 11<br>    },<br>    &quot;message&quot;: &quot;Get all Event success&quot;,<br>    &quot;status&quot;: true<br>}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                        </span>
+                                </span>
+                        </div>
+                    </td>
+
+                    <td width="130"><span class="nested-group-step">SUCCESS</span></td>
+                    <td width="100"><span class="nested-group-step"></span></td>
+                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+            <tr class="test-SUCCESS">
+                    <td colspan="2"></td>
+                <td width="130"><span class="top-level-step"><em>SUCCESS</em></span></td>
+                <td width="100"><span class="top-level-step"><em>0.38s</em></span></td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+<div id="beforefooter"></div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="version">Serenity BDD version 3.5.1</span>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function toggleDiv(divId) {
+        $("#" + divId).toggle();
+        var imgsrc = $(".img" + divId).attr('src');
+        if (imgsrc == 'images/plus.png') {
+            $(".img" + divId).attr("src", function () {
+                return "images/minus.png";
+            });
+
+        } else {
+            $(".img" + divId).attr("src", function () {
+                return "images/plus.png";
+            });
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    //<![CDATA[
+
+    $(document).ready(function () {
+        $('img.screenshot').imgPreview({
+            imgCSS: {
+                width: '500px'
+            },
+            distanceFromCursor: {top: 10, left: -200}
+        });
+    });
+
+    //]]>
+</script>
+<div id="imgPreviewContainer" style="position: absolute; top: 612px; left: 355px; display: none; " class=""><img
+            src="" style="display: none; "></div>
+<div id="imgPreviewContainer2" style="position: absolute; top: 925px; left: 320px; display: none; " class="">
+    <img style="width: 200px; display: none; " src=""></div>
+<div id="imgPreviewWithStyles" style="position: absolute; top: 1272px; left: 321px; display: none; " class="">
+    <img style="height: 200px; opacity: 1; display: none; " src=""></div>
+<div id="imgPreviewWithStyles2" style="display: none; position: absolute; "><img style="height: 200px; "></div>
+<div id="imgPreviewWithStyles3" style="display: none; position: absolute; "><img style="height: 200px; "></div>
+
+</div>
+</body>
+</html>

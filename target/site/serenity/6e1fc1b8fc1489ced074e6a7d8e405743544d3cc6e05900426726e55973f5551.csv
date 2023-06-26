@@ -1,0 +1,5 @@
+"Story","Title","Result","Date","Stability","Duration (s)"
+"As admin, I want to create, put, delete and get artikel and artikel by ID","As admin I want to create new artikel","SUCCESS","2023-06-26T11:50:45.547143+07:00[Asia/Jakarta]","0.0","0.4"
+"As admin, I want to create, put, delete and get artikel and artikel by ID","As admin I can get all artikel data","SUCCESS","2023-06-26T11:50:45.957508+07:00[Asia/Jakarta]","0.0","0.37"
+"As admin, I want to create, put, delete and get artikel and artikel by ID","As admin I can edit artikel data by ID","SUCCESS","2023-06-26T11:50:46.337705+07:00[Asia/Jakarta]","0.0","0.42"
+"As admin, I want to create, put, delete and get artikel and artikel by ID","As admin I can delete artikel data by ID","SUCCESS","2023-06-26T11:50:46.765024+07:00[Asia/Jakarta]","0.0","0.4"

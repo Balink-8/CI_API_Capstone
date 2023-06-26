@@ -1,0 +1,6 @@
+"Story","Title","Result","Date","Stability","Duration (s)"
+"As Admin, I want to manage Product features","As admin, I can get all Product data","SUCCESS","2023-06-26T11:50:51.2659+07:00[Asia/Jakarta]","0.0","0.22"
+"As Admin, I want to manage Product features","As admin, I can get product data by ID","SUCCESS","2023-06-26T11:50:51.494031+07:00[Asia/Jakarta]","0.0","0.24"
+"As Admin, I want to manage Product features","As admin, I can add new product data","SUCCESS","2023-06-26T11:50:51.744423+07:00[Asia/Jakarta]","0.0","0.43"
+"As Admin, I want to manage Product features","As admin, I can update product data","SUCCESS","2023-06-26T11:50:52.182869+07:00[Asia/Jakarta]","0.0","0.23"
+"As Admin, I want to manage Product features","As admin, I can delete product data","SUCCESS","2023-06-26T11:50:52.415987+07:00[Asia/Jakarta]","0.0","0.21"

@@ -1,0 +1,5 @@
+"Story","Title","Result","Date","Stability","Duration (s)"
+"As user, I want to manage Shop features","As user, I want to create new cart","SUCCESS","2023-06-26T11:50:39.733688+07:00[Asia/Jakarta]","0.0","0.34"
+"As user, I want to manage Shop features","As user, I can get all cart data","SUCCESS","2023-06-26T11:50:40.079602+07:00[Asia/Jakarta]","0.0","0.31"
+"As user, I want to manage Shop features","As user, I can edit cart data by ID","SUCCESS","2023-06-26T11:50:40.398245+07:00[Asia/Jakarta]","0.0","0.31"
+"As user, I want to manage Shop features","As user, I can delete cart data by ID","SUCCESS","2023-06-26T11:50:40.716986+07:00[Asia/Jakarta]","0.0","0.38"

@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Serenity Reports</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="bootstrap-icons/font/bootstrap-icons.css"><!-- JQuery -->
+<script type="text/javascript" src="scripts/jquery-1.11.1.min.js"></script><!-- Required Stylesheets -->
+<link href="bootstrap-treeview/dist/bootstrap-treeview.min.css" rel="stylesheet">
+
+<!-- Required Javascript -->
+<script src="bootstrap-treeview/dist/bootstrap-treeview.min.js"></script><!-- DataTables -->
+<link type="text/css" href="datatables/1.13.1/datatables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="datatables/1.13.1/datatables.min.js"></script>
+<script type="text/javascript" src="datatables/1.13.1/time-elapsed-dhms.js"></script>
+
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+<script>
+    jQuery.fn.dataTable.ext.type.order['time-elapsed-dhms-pre'] = function(data) {
+
+        var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
+        var multipliers = {
+            ms: 1,
+            s: 1000,
+            m: 60000,
+            h: 3600000,
+            d: 86400000
+        };
+
+        if (matches) {
+            var multiplier = multipliers[matches[2].toLowerCase()];
+            return parseFloat(matches[1]) * multiplier;
+        } else {
+            return -1;
+        };
+    };
+</script>
+<link rel="stylesheet" href="css/core.css"/>
+<link rel="stylesheet" href="css/link.css"/>
+<link type="text/css" media="screen" href="css/screen.css" rel="Stylesheet"/>
+<!--CHART.JS-->
+<script src="chartjs/chart.js"></script>
+<script src="chartjs/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="chartjs/patternomaly.min.js"></script>
+<script>
+    // Register the plugin to all charts:
+    Chart.register(ChartDataLabels);
+</script>
+<!-- JQuery-UI -->
+<link type="text/css" href="jqueryui/1.11.2-start/jquery-ui.min.css" rel="Stylesheet" />
+<script type="text/javascript" src="jqueryui/1.11.2-start/jquery-ui.min.js"></script><!-- DataTables -->
+<link type="text/css" href="datatables/1.13.1/datatables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="datatables/1.13.1/datatables.min.js"></script>
+<script type="text/javascript" src="datatables/1.13.1/time-elapsed-dhms.js"></script>
+
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+<script>
+    jQuery.fn.dataTable.ext.type.order['time-elapsed-dhms-pre'] = function(data) {
+
+        var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
+        var multipliers = {
+            ms: 1,
+            s: 1000,
+            m: 60000,
+            h: 3600000,
+            d: 86400000
+        };
+
+        if (matches) {
+            var multiplier = multipliers[matches[2].toLowerCase()];
+            return parseFloat(matches[1]) * multiplier;
+        } else {
+            return -1;
+        };
+    };
+</script>
+
+
+
+    <script class="code" type="text/javascript">$(document).ready(function () {
+
+
+            $("#scenario-results").DataTable({
+                "order": [[0, "asc",], [3, "asc",]],
+                "language": {
+                    searchPlaceholder: "Filter",
+                    search: ""
+                },
+                columnDefs: [
+                    {type: 'time-elapsed-dhms', targets: 4}
+                ]
+            })
+            $("#manual-scenario-results").DataTable({
+                "order": [[0, "asc",], [1, "asc",]],
+                "language": {
+                    searchPlaceholder: "Filter",
+                    search: ""
+                },
+            })
+
+        // Results table
+        $('#test-results-table').DataTable({
+            "order": [[0, "asc",], [3, "asc",]],
+            "pageLength": 100,
+            "lengthMenu": [[25, 50, 100, 200, -1], [25, 50, 100, 200, "All"]]
+        });
+
+    })
+    ;
+    </script>
+</head>
+
+<body class="results-page">
+<div id="topheader">
+    <div id="topbanner">
+        <div id="logo"><a href="index.html"><img src="images/serenity-logo.png" border="0"/></a></div>
+        <div id="projectname-banner" style="float:right">
+            <span class="projectname">
+                <span class="projecttitle">Serenity BDD Report</span>
+                <span class="projectsubtitle"></span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="middlecontent">
+
+
+    <div id="contenttop">
+        <div class="middlebg">
+        <span class="breadcrumbs"><a href="index.html">Home</a>
+                > <span
+                    class="truncate-60">Duration Under 1 Second</span>
+        </span>
+        </div>
+        <div class="rightbg"></div>
+    </div>
+
+    <div class="clr"></div>
+    <!--/* starts second table*/-->
+<div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#"><i class="bi bi-journal-check"></i> Overall Test Results</a>
+        </li>
+        <li >
+            <a href="capabilities.html"><i class="bi bi-journal-text"></i> Requirements</a>
+        </li>
+    </ul>
+    <span class="date-and-time"><a href="build-info.html"><i class="bi bi-info-circle"></i></a> Report generated 26-06-2023 11:50:56</span>
+    <br style="clear:left"/>
+</div>
+    <div class="clr"></div>
+    <div id="beforetable"></div>
+    <div id="results-dashboard">
+        <div class="middlb">
+            <div class="table">
+
+                <h2>Duration Under 1 Second</h2>
+                <table class='overview'>
+                    <tr>
+                        <td width="375px" valign="top">
+                            <div class="test-count-summary">
+                                <div>
+
+                                    45 tests
+
+                                     |
+                                        <a href="2a5b6a7be0f08df02d8ab0b4d4c68648c2695c6c7ef0658c71de4d42b1415b18.csv" title="Download CSV"> <i class="bi bi-cloud-arrow-down" title="Download CSV"></i></a>
+
+                                    <p class="report-info"><i class="bi bi-info-circle"></i> Note that results include
+                                        data-driven scenarios containing tests ,
+                                        which may also contain results other than tests .</p>
+
+
+
+                                </div>
+                            </div>
+
+                            <div>
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#summary"><i class="bi bi-house-door"></i> Summary</a>
+                                    </li>
+                                    <li>
+                                        <a data-toggle="tab" href="#tests"><i class="bi bi-speedometer"></i> Test
+                                            Results</a>
+                                    </li>
+                                </ul>
+
+                                <div class="card border">
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <div id="summary" class="tab-pane fade in active">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <div>
+                                                            <h3><i class="bi bi-speedometer2"></i> Key Statistics</h3>
+                                                            <div>
+                                                                <table class="table table-striped table-hover">
+                                                                    <tbody>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-card-checklist"></i> Number of Scenarios
+                                                                        </td>
+                                                                        <td>45</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-caret-right"></i> Number of Test Cases
+                                                                        </td>
+                                                                        <td>45</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-flag-fill"></i> Tests Started
+                                                                        </td>
+                                                                        <td>Jun 26, 2023 11:50:38</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-stop-circle"></i> Tests Finished
+                                                                        </td>
+                                                                        <td>Jun 26, 2023 11:50:54</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-stopwatch"></i> Total Duration
+                                                                        </td>
+                                                                        <td>16s</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-trophy"></i> Fastest Test
+                                                                        </td>
+                                                                        <td>96ms</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-skip-start"></i> Slowest Test
+                                                                        </td>
+                                                                        <td>428ms</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-stopwatch"></i> Average Execution Time
+                                                                        </td>
+                                                                        <td>323ms</td>
+                                                                    </tr>
+                                                                    <tr scope="row">
+                                                                        <td>
+                                                                            <i class="bi bi-stopwatch-fill"></i> Total Execution Time
+                                                                        </td>
+                                                                        <td>14s</td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <h4><i class="bi bi-check-square"></i> Test Outcomes</h4>
+                                                        <!-- Severity bar chart -->
+                                                        <div class="chart-container" style="position: relative; width:30vw">
+                                                            <canvas id="severityChart" width="300" height="300"></canvas>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <h4><i class="bi bi-graph-up"></i> Test Performance</h4>
+
+                                                        <!-- Duration bar chart -->
+                                                        <div class="chart-container" style="position: relative; width:30vw">
+                                                            <canvas id="durationChart" width="300" height="300"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <h3>Tags</h3>
+
+                                                                <div class="card">
+                                                                    <div class="card-body">
+                                                                        <div>
+                                                                                <a href="f996eefad353fa338ea241723df27fee444cd0ed8b6411974ad35f33ffde36eb.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCART04&nbsp;&nbsp;&nbsp;2
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="ace4dc333d2a9a016eee7fc38d51b2d22887f81bf9e2ddf465d63cd8798144db.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCPROFILE02&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="e699fe60208072209f99f504720fbb9b60dcfae6057a5e37ab03ea07a7d2d788.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCPROMO03&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="8c13a9f321da818a1c76ba0e2f779d602084869b68a7573cf196c0b02d0a2d8f.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Account&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="828503ee81c4f7ae8718bf67fb13797888d99bc863faabdf55c53586fa91e59d.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY05&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="fded749f806fdaf1b8072a802c87e8de36d37af04d873ee987357a68868d597e.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Tcartikel04&nbsp;&nbsp;&nbsp;2
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="b428c64bf677686b81f915b5173826ba3d027faa03a542cabcbb4c20bb869079.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY01&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="631a1faf9933a18d632e2a3e5266951a7c3870948e3374634783cdb872e8a965.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCEVENT05&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="bbcbb00f7bb5920f3c4cda60177ffe851ac452d96676441fb64feb85908c7645.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> GetProductByID&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="665c89911a5011c94a3b6212027268422452e832b50e379233485743afd76fbe.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Product&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="4bbd6a64451024919df124108d7dc8fe213ad7bc0f66e67831278d96b986014d.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCPROFILE01&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="32765e1789b55e63c97efdf251ee8cfda550c3fd089592a37d4826b26e3e1853.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCART03&nbsp;&nbsp;&nbsp;2
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="bddc699e2511b17a3c49790832aeafea68ffb107cfeacb4efba9e101463bee39.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Login Mobile&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="74d7dc3e582753fa67530ccaf68c5f65417b48298600d4d43954d57821b26b00.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Tcartikel01&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="f91da570f9a1ebdc162be1fc0d471deef866a7617da29eecb6bf11dfee89d8af.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY04&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="04521c6328831e1cc3cf9f14d0a196b5fbcc80d4c673ce94388be8fd86ff332d.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Add New Product&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="397749a24d20779260cdc066f81002bbaf1122784912d20b02810570d45dd106.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCEVENT06&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="17bada1afaf3c6503e1ca5287dfaa191d674bd392b19c4eca990e31d3a1aee2a.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY08&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="37dc2b4e3eaf7bd6e01177cca352d8298229fa65563a576bef2af5050c81e2b3.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCEVENT02&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="ca6d22fbb4ff16003500067cf7ce7130eb5123b73eb0b076cc723e9ab331c316.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCPROMO02&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="c640772f0e252b22544997f66e195bf62619f402f5a04818d4300b0cb102b3fa.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Delete Product&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="c721517496ffad35fe9a5d73f07a9bd15eb22da3cff8328e1d9f7ec70655c6b0.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Login&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="dae1e50e1354539832f786e0dacd149931f6495e3a83abdc315962ef700bebe0.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCART02&nbsp;&nbsp;&nbsp;2
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="821beb03128cb37638a58271e70d22932c7db417ef24bcf285203f5224bbfccb.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY03&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="efe5c81e19101d9150a327b23597df6a8b3e0fd869b6b40b9a432d4011b5198e.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Tcartikel02&nbsp;&nbsp;&nbsp;2
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="792235948a140d675b3fded2e5a3e699a7b093dba5256ee9be1a3919cbd3ccf7.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCEVENT07&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="2129931c7d8bf4103fe673c3d93e5ecf6ed9b1d57d041adf899c4f085a96bdb3.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY07&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="d0f2b0e79461bd70b4fab96ef86e99c84dfe9a327e13b38fd5e467ccd8eba6ba.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCEVENT03&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="792a06d2a20c18dc036f6aef7268c58da6fc8f229cdd3095a0f730ca95f3b690.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCPROMO01&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="49b92fa50ee15376aa7ae0554e459836584ff330a7eaafdd051bc61d3028ab75.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Update Product&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="8fd681b4a147a8c4b0114b606b50250f6874e5529657ab6772e337616223a678.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCPROFILE03&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="9b01dcf347647ebaa864153a0d933742eff9dcfc0ce117422a98c258c3c9f362.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCART01&nbsp;&nbsp;&nbsp;2
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="cc24052d00ca738f2c540962f639fd13e6980a97d8b54cc116e5a79dcbadaf6a.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY02&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="214f9686ba9f887dd6471dd5132bc0bacde3a6c844396580634463a5f241735e.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCPROMO04&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="cb0b384f1b23c4eef1a6260b08897aa1d367b99b6c50cf7b9872fdc4ecdc236b.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCEVENT08&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="1406f5bf344e282e3df7cdbde5b6ccc04c93f7d254c0191bfdea58220b01274c.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Tcartikel03&nbsp;&nbsp;&nbsp;2
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="1bcf83a840199c2d4a6790818ecd95af9e33fc15668e9df9c51b3dbc68c351e7.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> TCCATEGORY06&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="b5a51fc64ff8ca83de06a356b9bd0e5c8cbde54af2b1e8e384a9228fd9a93a6f.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Register&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card">
+                                                                    <div class="card-body">
+                                                                            <h5 class="card-title">Feature</h5>
+                                                                        <div>
+                                                                                <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Website/As Admin, I Want To Manage The Event Feature&nbsp;&nbsp;&nbsp;8
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="e2d0389f9ededdb7b08a4db679c57db8a0a8c6e5d02acff0d9f177b27c98f7ec.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Website/As Admin, I Want To Create, Put, Delete And Get Artikel And Artikel By ID&nbsp;&nbsp;&nbsp;4
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="ea17ded8f711e4e6d4f1fbd83acced25ce3a7ca1f545824fc67ac1f73912ad47.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Mobile/As User, I Want To Manage Shop Features&nbsp;&nbsp;&nbsp;4
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="1d98e54a57b90e0830f4b0960a285a1099228dc6918286f8e4006d45888bd16c.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Mobile/As A User, I Logged In Successfully&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="c60446096bc0d5730ddd6966183437e3ed30520f673693bb870c12313004ceee.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Mobile/As Admin, I Want To Manage The Event Feature&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="2dd271945a25f5647fc767c86cab82a38b7ab357c0f177824402149639d4e8ea.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Website/As Admin, I Want To Create, Put, Delete And Get Category And Category By ID&nbsp;&nbsp;&nbsp;4
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="45ce60b8733b5f31c0e938447ebd36300e7accfbfd6c955a345883a46c27bbc5.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Mobile/As User, I Want To Create, Put, Delete And Get Category And Category By ID&nbsp;&nbsp;&nbsp;4
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="b90551d30dbab7b8cc15f7730ca5bc7fb3ddc9b8847803f401f26ba1db4452f1.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Mobile/As User, I Want To Create, Put, Delete And Get Artikel And Artikel By ID&nbsp;&nbsp;&nbsp;3
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="8bace24054840aa8c1daa8125a2509404c1c7eea9dd552cc9847cbab3736efae.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Mobile/As User, I Register In Successfully&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="7e5731ccec63b7d7fdefbd35a4015da347872aeaee334b68b4b72fd1962731f6.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Mobile/As User, I Want To Manage The Event Feature&nbsp;&nbsp;&nbsp;4
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="54842bdebd82a99ffc5a49ad1a91468bbb794eee3bbaf3b24f8dfa9018f38bc8.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Website/As A Admin, I Logged In Successfully&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="b7f84476a4470ad4023892e416ff3956c12e87f4e03558161931bc755fc4db3f.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Website/As Admin, I Want To Manage Product Features&nbsp;&nbsp;&nbsp;5
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="a5aafdce1978c10424cc745c3c18b618dc72f6496e62437fbeaad46e9e95b59f.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Website/As Admin, I Want To Manage Shop Features&nbsp;&nbsp;&nbsp;4
+                                                                                    </span>
+                                                                                </a>
+                                                                                <a href="d0823ba39760694b2c0df4e942b4658a3f30cc86eda39ec5ec7d77b0030ead78.html">
+                                                                                    <span class="badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                                                                        <i class="bi bi-tag"></i> Website/As Admin, I Want To Manage Promo Features&nbsp;&nbsp;&nbsp;1
+                                                                                    </span>
+                                                                                </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+
+                                            <div class="container-fluid">
+
+                                            </div>
+                                            <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Tags</h3>
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                    <a href="f996eefad353fa338ea241723df27fee444cd0ed8b6411974ad35f33ffde36eb.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCART04&nbsp;&nbsp;&nbsp;2
+                                    </span>
+                                    </a>
+                                    <a href="ace4dc333d2a9a016eee7fc38d51b2d22887f81bf9e2ddf465d63cd8798144db.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCPROFILE02&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="e699fe60208072209f99f504720fbb9b60dcfae6057a5e37ab03ea07a7d2d788.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCPROMO03&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="8c13a9f321da818a1c76ba0e2f779d602084869b68a7573cf196c0b02d0a2d8f.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Account&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="828503ee81c4f7ae8718bf67fb13797888d99bc863faabdf55c53586fa91e59d.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY05&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="fded749f806fdaf1b8072a802c87e8de36d37af04d873ee987357a68868d597e.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Tcartikel04&nbsp;&nbsp;&nbsp;2
+                                    </span>
+                                    </a>
+                                    <a href="b428c64bf677686b81f915b5173826ba3d027faa03a542cabcbb4c20bb869079.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY01&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="631a1faf9933a18d632e2a3e5266951a7c3870948e3374634783cdb872e8a965.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCEVENT05&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="bbcbb00f7bb5920f3c4cda60177ffe851ac452d96676441fb64feb85908c7645.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> GetProductByID&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="665c89911a5011c94a3b6212027268422452e832b50e379233485743afd76fbe.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Product&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="4bbd6a64451024919df124108d7dc8fe213ad7bc0f66e67831278d96b986014d.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCPROFILE01&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="32765e1789b55e63c97efdf251ee8cfda550c3fd089592a37d4826b26e3e1853.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCART03&nbsp;&nbsp;&nbsp;2
+                                    </span>
+                                    </a>
+                                    <a href="bddc699e2511b17a3c49790832aeafea68ffb107cfeacb4efba9e101463bee39.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Login Mobile&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="74d7dc3e582753fa67530ccaf68c5f65417b48298600d4d43954d57821b26b00.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Tcartikel01&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="f91da570f9a1ebdc162be1fc0d471deef866a7617da29eecb6bf11dfee89d8af.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY04&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="04521c6328831e1cc3cf9f14d0a196b5fbcc80d4c673ce94388be8fd86ff332d.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Add New Product&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="397749a24d20779260cdc066f81002bbaf1122784912d20b02810570d45dd106.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCEVENT06&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="17bada1afaf3c6503e1ca5287dfaa191d674bd392b19c4eca990e31d3a1aee2a.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY08&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="37dc2b4e3eaf7bd6e01177cca352d8298229fa65563a576bef2af5050c81e2b3.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCEVENT02&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="ca6d22fbb4ff16003500067cf7ce7130eb5123b73eb0b076cc723e9ab331c316.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCPROMO02&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="c640772f0e252b22544997f66e195bf62619f402f5a04818d4300b0cb102b3fa.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Delete Product&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="c721517496ffad35fe9a5d73f07a9bd15eb22da3cff8328e1d9f7ec70655c6b0.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Login&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="dae1e50e1354539832f786e0dacd149931f6495e3a83abdc315962ef700bebe0.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCART02&nbsp;&nbsp;&nbsp;2
+                                    </span>
+                                    </a>
+                                    <a href="821beb03128cb37638a58271e70d22932c7db417ef24bcf285203f5224bbfccb.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY03&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="efe5c81e19101d9150a327b23597df6a8b3e0fd869b6b40b9a432d4011b5198e.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Tcartikel02&nbsp;&nbsp;&nbsp;2
+                                    </span>
+                                    </a>
+                                    <a href="792235948a140d675b3fded2e5a3e699a7b093dba5256ee9be1a3919cbd3ccf7.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCEVENT07&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="2129931c7d8bf4103fe673c3d93e5ecf6ed9b1d57d041adf899c4f085a96bdb3.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY07&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="d0f2b0e79461bd70b4fab96ef86e99c84dfe9a327e13b38fd5e467ccd8eba6ba.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCEVENT03&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="792a06d2a20c18dc036f6aef7268c58da6fc8f229cdd3095a0f730ca95f3b690.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCPROMO01&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="49b92fa50ee15376aa7ae0554e459836584ff330a7eaafdd051bc61d3028ab75.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Update Product&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="8fd681b4a147a8c4b0114b606b50250f6874e5529657ab6772e337616223a678.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCPROFILE03&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="9b01dcf347647ebaa864153a0d933742eff9dcfc0ce117422a98c258c3c9f362.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCART01&nbsp;&nbsp;&nbsp;2
+                                    </span>
+                                    </a>
+                                    <a href="cc24052d00ca738f2c540962f639fd13e6980a97d8b54cc116e5a79dcbadaf6a.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY02&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="214f9686ba9f887dd6471dd5132bc0bacde3a6c844396580634463a5f241735e.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCPROMO04&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="cb0b384f1b23c4eef1a6260b08897aa1d367b99b6c50cf7b9872fdc4ecdc236b.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCEVENT08&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="1406f5bf344e282e3df7cdbde5b6ccc04c93f7d254c0191bfdea58220b01274c.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Tcartikel03&nbsp;&nbsp;&nbsp;2
+                                    </span>
+                                    </a>
+                                    <a href="1bcf83a840199c2d4a6790818ecd95af9e33fc15668e9df9c51b3dbc68c351e7.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> TCCATEGORY06&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="b5a51fc64ff8ca83de06a356b9bd0e5c8cbde54af2b1e8e384a9228fd9a93a6f.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Register&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                                <h5 class="card-title">Feature</h5>
+                            <div>
+                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Website/As Admin, I Want To Manage The Event Feature&nbsp;&nbsp;&nbsp;8
+                                    </span>
+                                    </a>
+                                    <a href="e2d0389f9ededdb7b08a4db679c57db8a0a8c6e5d02acff0d9f177b27c98f7ec.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Website/As Admin, I Want To Create, Put, Delete And Get Artikel And Artikel By ID&nbsp;&nbsp;&nbsp;4
+                                    </span>
+                                    </a>
+                                    <a href="ea17ded8f711e4e6d4f1fbd83acced25ce3a7ca1f545824fc67ac1f73912ad47.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Mobile/As User, I Want To Manage Shop Features&nbsp;&nbsp;&nbsp;4
+                                    </span>
+                                    </a>
+                                    <a href="1d98e54a57b90e0830f4b0960a285a1099228dc6918286f8e4006d45888bd16c.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Mobile/As A User, I Logged In Successfully&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="c60446096bc0d5730ddd6966183437e3ed30520f673693bb870c12313004ceee.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Mobile/As Admin, I Want To Manage The Event Feature&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="2dd271945a25f5647fc767c86cab82a38b7ab357c0f177824402149639d4e8ea.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Website/As Admin, I Want To Create, Put, Delete And Get Category And Category By ID&nbsp;&nbsp;&nbsp;4
+                                    </span>
+                                    </a>
+                                    <a href="45ce60b8733b5f31c0e938447ebd36300e7accfbfd6c955a345883a46c27bbc5.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Mobile/As User, I Want To Create, Put, Delete And Get Category And Category By ID&nbsp;&nbsp;&nbsp;4
+                                    </span>
+                                    </a>
+                                    <a href="b90551d30dbab7b8cc15f7730ca5bc7fb3ddc9b8847803f401f26ba1db4452f1.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Mobile/As User, I Want To Create, Put, Delete And Get Artikel And Artikel By ID&nbsp;&nbsp;&nbsp;3
+                                    </span>
+                                    </a>
+                                    <a href="8bace24054840aa8c1daa8125a2509404c1c7eea9dd552cc9847cbab3736efae.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Mobile/As User, I Register In Successfully&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="7e5731ccec63b7d7fdefbd35a4015da347872aeaee334b68b4b72fd1962731f6.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Mobile/As User, I Want To Manage The Event Feature&nbsp;&nbsp;&nbsp;4
+                                    </span>
+                                    </a>
+                                    <a href="54842bdebd82a99ffc5a49ad1a91468bbb794eee3bbaf3b24f8dfa9018f38bc8.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Website/As A Admin, I Logged In Successfully&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                                    <a href="b7f84476a4470ad4023892e416ff3956c12e87f4e03558161931bc755fc4db3f.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Website/As Admin, I Want To Manage Product Features&nbsp;&nbsp;&nbsp;5
+                                    </span>
+                                    </a>
+                                    <a href="a5aafdce1978c10424cc745c3c18b618dc72f6496e62437fbeaad46e9e95b59f.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Website/As Admin, I Want To Manage Shop Features&nbsp;&nbsp;&nbsp;4
+                                    </span>
+                                    </a>
+                                    <a href="d0823ba39760694b2c0df4e942b4658a3f30cc86eda39ec5ec7d77b0030ead78.html">
+                                    <span class="tag-badge badge" style="background-color:#b0cf73; margin:1em;padding:4px;">
+                                        <i class="bi bi-tag-fill"></i> Website/As Admin, I Want To Manage Promo Features&nbsp;&nbsp;&nbsp;1
+                                    </span>
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+                                            </div>
+                                        </div>
+                                        <div id="tests" class="tab-pane fade in">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h3><i class="bi bi-gear"></i> Automated Tests</h3>
+
+                                            <table class="scenario-result-table table" id="scenario-results">
+                                                <thead>
+                                                <tr>
+                                                    <th>Feature</th>
+                                                    <th class="test-name-column">Scenario</th>
+                                                    <th>Steps</th>
+                                                    <th>Started</th>
+                                                    <th>Total Duration</th>
+                                                    <th>Result</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b90551d30dbab7b8cc15f7730ca5bc7fb3ddc9b8847803f401f26ba1db4452f1.html">As user, I want to create, put, delete and get artikel and artikel by ID</a>
+                                                            </td>
+                                                            <td><a href="6338d492d70ad905a23f049d56853366fb28a2ae29d89fae5fb4f5c2e83c2946.html">As user I can get all artikel data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:38</td>
+                                                            <td>382ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b90551d30dbab7b8cc15f7730ca5bc7fb3ddc9b8847803f401f26ba1db4452f1.html">As user, I want to create, put, delete and get artikel and artikel by ID</a>
+                                                            </td>
+                                                            <td><a href="58938cdb0df9d25d6c04fedb751ecf7f884eebdebb2ea7f2934469faa6106cc5.html">As user I can edit artikel data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:38</td>
+                                                            <td>368ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b90551d30dbab7b8cc15f7730ca5bc7fb3ddc9b8847803f401f26ba1db4452f1.html">As user, I want to create, put, delete and get artikel and artikel by ID</a>
+                                                            </td>
+                                                            <td><a href="37d63053ac673e52b87cb651d671c52c4e4faa6592bd602cf3e44ec49182b8b1.html">As user I can delete artikel data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:39</td>
+                                                            <td>403ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="ea17ded8f711e4e6d4f1fbd83acced25ce3a7ca1f545824fc67ac1f73912ad47.html">As user, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="fcd372c3cc96d89af6ec2e61380c3a3a964b67ec693d62d1adc82f1596a12420.html">As user, I want to create new cart</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:39</td>
+                                                            <td>338ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="ea17ded8f711e4e6d4f1fbd83acced25ce3a7ca1f545824fc67ac1f73912ad47.html">As user, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="dd185a67a3ae434471359d37d607fb430ca9dfc337d945b28989420d52ef7704.html">As user, I can get all cart data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:40</td>
+                                                            <td>310ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="ea17ded8f711e4e6d4f1fbd83acced25ce3a7ca1f545824fc67ac1f73912ad47.html">As user, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="ba21eb5b6282e559a33e9b8a4f41aee988af7d1bd24dd153f9f366febc4f4e79.html">As user, I can edit cart data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:40</td>
+                                                            <td>311ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="ea17ded8f711e4e6d4f1fbd83acced25ce3a7ca1f545824fc67ac1f73912ad47.html">As user, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="221ef83f5a86c342f17a179c284d7be4fa1ba4dc588afafe58db2c8d751df57c.html">As user, I can delete cart data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:40</td>
+                                                            <td>378ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="45ce60b8733b5f31c0e938447ebd36300e7accfbfd6c955a345883a46c27bbc5.html">As user, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="5f360daa21e32f658d932447a070ced10b1b977875b131fd67fbd3ec2b1a433a.html">As user I want to create new category</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:41</td>
+                                                            <td>340ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="45ce60b8733b5f31c0e938447ebd36300e7accfbfd6c955a345883a46c27bbc5.html">As user, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="9ca2215fcb402612238a700b87c7cf535ef63de0b089659e268ff16e842195ef.html">As user I can get all category data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:41</td>
+                                                            <td>320ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="45ce60b8733b5f31c0e938447ebd36300e7accfbfd6c955a345883a46c27bbc5.html">As user, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="4066e5c84b69ff123b789de664c4922af339626a80b2045185c7e8ad024ec05b.html">As user I can edit category data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:41</td>
+                                                            <td>343ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="45ce60b8733b5f31c0e938447ebd36300e7accfbfd6c955a345883a46c27bbc5.html">As user, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="bf0685eb27893033e0f659a6cbb3a6720e4f143fbef205cf34b1a85cb00486c2.html">As user I can delete category data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:42</td>
+                                                            <td>354ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="7e5731ccec63b7d7fdefbd35a4015da347872aeaee334b68b4b72fd1962731f6.html">As user, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="ce4f98cd3519f5693b5ba656c0e1b2cc75f57ed24d72228f6f1af13bb8ed1cc0.html">As user, ensures that new event can be added correctly</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:42</td>
+                                                            <td>400ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="7e5731ccec63b7d7fdefbd35a4015da347872aeaee334b68b4b72fd1962731f6.html">As user, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="cc5b8853da815c4671122d2bb5d1fc18b7f2712d83f3c8a5e6199a2b5beb692e.html">As user, I can get all event data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:42</td>
+                                                            <td>410ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="7e5731ccec63b7d7fdefbd35a4015da347872aeaee334b68b4b72fd1962731f6.html">As user, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="8aba8badd7bf84b1c9a4b31e372757e603ef0a38419a4bdae3cac4a96b047d27.html">As user, I can edit event data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:43</td>
+                                                            <td>368ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="7e5731ccec63b7d7fdefbd35a4015da347872aeaee334b68b4b72fd1962731f6.html">As user, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="320b23a37229e1ae9ed763fc7cca65189698b1cd81d82eb20109227dbb3eb908.html">As user, I can delete event data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:43</td>
+                                                            <td>382ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1d98e54a57b90e0830f4b0960a285a1099228dc6918286f8e4006d45888bd16c.html">As a user, I logged in successfully</a>
+                                                            </td>
+                                                            <td><a href="4b8cd17e530700b1c50899091ffad1d0f1d70a2c679c310ec8415106bae6a950.html">As user I want to input valid data to then i can see success login</a></td>
+                                                            <td>3</td>
+                                                            <td>11:50:44</td>
+                                                            <td>115ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="c60446096bc0d5730ddd6966183437e3ed30520f673693bb870c12313004ceee.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="0d8716cd25ec684aee0a015f72fad5eef81e4a5658903c97981dbc8e8464bd3b.html">As admin, ensures that get user data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:44</td>
+                                                            <td>361ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="8bace24054840aa8c1daa8125a2509404c1c7eea9dd552cc9847cbab3736efae.html">As User, I register in successfully</a>
+                                                            </td>
+                                                            <td><a href="dd02d85ed8a19d19269574c8f52b02c11780a8aaac5ad8bb09f13d46d6236e80.html">As user I want to input valid data to then i can see success register</a></td>
+                                                            <td>3</td>
+                                                            <td>11:50:45</td>
+                                                            <td>096ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="d0823ba39760694b2c0df4e942b4658a3f30cc86eda39ec5ec7d77b0030ead78.html">As Admin, I want to manage promo features</a>
+                                                            </td>
+                                                            <td><a href="0e33508ae5aa93b2ede8e858e3b7e8bb97fa16efd70182ce067820d44d592b49.html">As admin, I can get all account data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:45</td>
+                                                            <td>246ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="e2d0389f9ededdb7b08a4db679c57db8a0a8c6e5d02acff0d9f177b27c98f7ec.html">As admin, I want to create, put, delete and get artikel and artikel by ID</a>
+                                                            </td>
+                                                            <td><a href="125bc0a460e586ee24f90dcb5f689d2c01d1e9af1906bcf1ddfd9d22ea4602d7.html">As admin I want to create new artikel</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:45</td>
+                                                            <td>398ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="e2d0389f9ededdb7b08a4db679c57db8a0a8c6e5d02acff0d9f177b27c98f7ec.html">As admin, I want to create, put, delete and get artikel and artikel by ID</a>
+                                                            </td>
+                                                            <td><a href="0d5a16e6d0316a2fa1459f9c7f372b79b488cb8dc93416a859373421b5b461fd.html">As admin I can get all artikel data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:45</td>
+                                                            <td>372ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="e2d0389f9ededdb7b08a4db679c57db8a0a8c6e5d02acff0d9f177b27c98f7ec.html">As admin, I want to create, put, delete and get artikel and artikel by ID</a>
+                                                            </td>
+                                                            <td><a href="d2931a2a834bd869f6a0ff6df72360357c46f59e98e2ff70974a4ea72de87470.html">As admin I can edit artikel data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:46</td>
+                                                            <td>416ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="e2d0389f9ededdb7b08a4db679c57db8a0a8c6e5d02acff0d9f177b27c98f7ec.html">As admin, I want to create, put, delete and get artikel and artikel by ID</a>
+                                                            </td>
+                                                            <td><a href="02c3ecf0dde0b61ffe65094340f8a604fc794c50b0d9a4063814653fac928d82.html">As admin I can delete artikel data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:46</td>
+                                                            <td>397ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="a5aafdce1978c10424cc745c3c18b618dc72f6496e62437fbeaad46e9e95b59f.html">As Admin, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="8a5f686fabcc68f0619f7e7dafce7bf5195320d6cbfc67cf774d1a1dc23e0435.html">As admin, I want to create new cart</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:47</td>
+                                                            <td>356ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="a5aafdce1978c10424cc745c3c18b618dc72f6496e62437fbeaad46e9e95b59f.html">As Admin, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="f06904ef956a3579e91ba220f71f035f293de42ada3ee37a0bb55c2aadd81e81.html">As admin, I can get all cart data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:47</td>
+                                                            <td>348ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="a5aafdce1978c10424cc745c3c18b618dc72f6496e62437fbeaad46e9e95b59f.html">As Admin, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="1df11e1b5d2f31f5482b76976315db8a062d8216374ec924beebf70fd018c5c8.html">As admin, I can edit cart data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:47</td>
+                                                            <td>343ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="a5aafdce1978c10424cc745c3c18b618dc72f6496e62437fbeaad46e9e95b59f.html">As Admin, I want to manage Shop features</a>
+                                                            </td>
+                                                            <td><a href="9d501e1d1fe31339db25de3c9c6fd24f982d8352417e420baa5762a334f01645.html">As admin, I can delete cart data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:48</td>
+                                                            <td>356ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2dd271945a25f5647fc767c86cab82a38b7ab357c0f177824402149639d4e8ea.html">As admin, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="945f10e4268014548e1d3819465fda3d12dedf376e50566f0881b629467e262a.html">As admin, I want to create new category</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:48</td>
+                                                            <td>312ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2dd271945a25f5647fc767c86cab82a38b7ab357c0f177824402149639d4e8ea.html">As admin, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="c933bd9835ded53a99566fae5657e9d30e851634d3883a851ecaaff561b4df60.html">As admin, I can get all category data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:48</td>
+                                                            <td>324ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2dd271945a25f5647fc767c86cab82a38b7ab357c0f177824402149639d4e8ea.html">As admin, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="1c264d68ab9c8efc2f03d7ead5bb2b427e99b13c68a922017a26099001eafa69.html">As admin, I can edit category data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:49</td>
+                                                            <td>315ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2dd271945a25f5647fc767c86cab82a38b7ab357c0f177824402149639d4e8ea.html">As admin, I want to create, put, delete and get category and category by ID</a>
+                                                            </td>
+                                                            <td><a href="76c0ecfb21baf0fcc9480e048533c6c89ef2836f62760d149c24f3aaba4effbf.html">As admin, I can delete category data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:49</td>
+                                                            <td>328ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="648670dc178778cb9970276031a9d67bbcc67d78062e08cfd4c8f884c985efe7.html">As admin, I can get all event data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:50</td>
+                                                            <td>364ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="116ab4393cc4a477939363faffffe25591d39dd4765c7ebbd8a012fef0c85718.html">As admin, I can edit event data by ID</a></td>
+                                                            <td>4</td>
+                                                            <td>11:50:50</td>
+                                                            <td>211ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="54842bdebd82a99ffc5a49ad1a91468bbb794eee3bbaf3b24f8dfa9018f38bc8.html">As a admin, I logged in successfully</a>
+                                                            </td>
+                                                            <td><a href="5961e3f1b3a203f6cfa74d0a894c54d6e00c1fb5dcd416269afe8c0cfe8798f4.html">As Admin I want to input valid data to then i can see success login</a></td>
+                                                            <td>3</td>
+                                                            <td>11:50:51</td>
+                                                            <td>112ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b7f84476a4470ad4023892e416ff3956c12e87f4e03558161931bc755fc4db3f.html">As Admin, I want to manage Product features</a>
+                                                            </td>
+                                                            <td><a href="78a2673604a0046a7c84fff40efc19cad1c417a5b77436b5099c858fa38e413a.html">As admin, I can get all Product data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:51</td>
+                                                            <td>216ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b7f84476a4470ad4023892e416ff3956c12e87f4e03558161931bc755fc4db3f.html">As Admin, I want to manage Product features</a>
+                                                            </td>
+                                                            <td><a href="a52753d0551b552333104f32cbca7d60cceacc3e0f06421378e3fafe742d4ced.html">As admin, I can get product data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:51</td>
+                                                            <td>238ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b7f84476a4470ad4023892e416ff3956c12e87f4e03558161931bc755fc4db3f.html">As Admin, I want to manage Product features</a>
+                                                            </td>
+                                                            <td><a href="14d21320cd9f89c3909cb39d83b086ce458786e5eb649156888fef07a4a6211c.html">As admin, I can add new product data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:51</td>
+                                                            <td>428ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b7f84476a4470ad4023892e416ff3956c12e87f4e03558161931bc755fc4db3f.html">As Admin, I want to manage Product features</a>
+                                                            </td>
+                                                            <td><a href="442f2b203129062ae4e3f7026302697eb91daf8b7d88aaa2d12ccab29963fe02.html">As admin, I can update product data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:52</td>
+                                                            <td>226ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="b7f84476a4470ad4023892e416ff3956c12e87f4e03558161931bc755fc4db3f.html">As Admin, I want to manage Product features</a>
+                                                            </td>
+                                                            <td><a href="252f8fa69d1193cac9db1f25ec3e13f9b09d6eff6a465135151092dd259b0563.html">As admin, I can delete product data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:52</td>
+                                                            <td>213ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="92e9e1a43f996549ce0860c618f0e620d0ac040077077b506778229613e05284.html">As admin, ensures that get admin data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:52</td>
+                                                            <td>367ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="61d2be028900166f2eac9e6ede0533bfa520f5ef55f3f192211002b650a45e62.html">As admin, ensures that new event can be added correctly</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:53</td>
+                                                            <td>378ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="0a9190ed1bb8bac42d5e491ffbe26a198d4d157f351f045fec6a0670e37b849b.html">As admin, ensures that new promo can be added correctly</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:53</td>
+                                                            <td>367ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="a7e7401137559af29b03edcfdc6f50fd3fe2040542c74264eb6bc509c8c8bd53.html">As admin, I can get all promo data</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:53</td>
+                                                            <td>326ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="12d0be20cfc488ce4907c407296b4851564b66a4ac70814026f8859df755d304.html">As admin, I can edit promo data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:54</td>
+                                                            <td>316ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="3cae562232cca5394b0f10b15d54b65753747a164f6fe7058da50d8aa1d61fcd.html">As Admin, I want to manage the event feature</a>
+                                                            </td>
+                                                            <td><a href="8b521204b094c4a11072298c42c5dbd9c518ddced2c298c81ac7207de79c73f8.html">As admin, I can delete event data by ID</a></td>
+                                                            <td>5</td>
+                                                            <td>11:50:54</td>
+                                                            <td>321ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                </tbody>
+                                            </table>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h3><i class="bi bi-hand-index-thumb"></i> Manual Tests</h3>
+
+                                                No manual tests were recorded
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="beforefooter"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="version">Serenity BDD version 3.5.1</span>
+        </div>
+    </div>
+</div>
+
+<!-- Chart data -->
+    <!-- PIE CHART -->
+    <script>
+
+        // The results pie chart
+        const outcomeChartCtx = document.getElementById('resultChart');
+
+        // Options define for display value on top of bars
+        const outcomeDetailsReports = [
+            { title: 'Passing Test Cases', link: "01f5288b80adbd3af52a8ed68a4a616d3164f750229f80da1ef344382d948835.html" },
+            { title: 'Pending Test Cases', link: "bde4fca42ca8baa0fe2eac76a241c84327dfe4ca903a1daa7cae83a1035d4745.html" },
+            { title: 'Ignored Test Cases', link: "c1b352893c3d69e59317fd825f20a75f987a859afe98fb4434f47dce70c48fd4.html" },
+            { title: 'Skipped Test Cases', link: "7409dbb9985b960343780b303d8028480bd55e9aebd855c90eff0a000e21ccc8.html" },
+            { title: 'Aborted Test Cases',  link: "91152e032be7fe762aa6823d6424278e2c72efeb7622a5e63c7bf5980b4fd8a0.html"},
+            { title: 'Failed Test Cases', link: "da5b0c51b332adf0ef993a9f086d6a1b51a3d800248ec6ae281212092f35bd37.html"  },
+            { title: 'Broken Test Cases', link: "c8a926210aeff57f8aa7ea799262d4b730915a909cd5ecd6a705b1fa13bc7aa8.html"    },
+            { title: 'Compromised Test Cases',  link: "02dd8f8ada4c10b8ebb5c1f309605a6f7c147adc21bcf5c55829855ba045ff03.html" },
+        ]
+        const outcomeData = {
+            labels: ['Passing Test Cases', 'Pending Test Cases', 'Ignored Test Cases', 'Skipped Test Cases', 'Aborted Test Cases', 'Failed Test Cases', 'Broken Test Cases', 'Compromised Test Cases','Undefined Test Cases'],
+            datasets: [{
+                label: 'Test Results',
+                fill: false,
+                data: [{meta: 'Passing tests', value: 45}, {meta: 'Pending tests', value: 0}, {meta: 'Ignored tests', value: 0}, {meta: 'Skipped tests', value: 0}, {meta: 'Aborted tests', value: 0}, {meta: 'Failing tests', value: 0}, {meta: 'Broken tests', value: 0}, {meta: 'Compromised tests', value: 0}],
+                backgroundColor: ['rgba(153,204,51,0.5)','rgba(165, 199, 238, 0.5)','rgba(168, 168, 168, 0.5)','rgba(238, 224, 152, 0.75)','rgba(255, 153, 102, 0.5)','rgba(255, 22, 49, 0.5)','rgba(255, 97, 8, 0.5)','rgba(255, 104, 255, 0.5)','rgba(83, 50, 168, 0.5)'],
+                borderColor: ['rgba(153,204,51,1)','rgba(165, 199, 238, 1)','rgba(168, 168, 168, 1)','rgba(238, 224, 152, 1)','rgba(255, 153, 102, 1)','rgba(255, 22, 49, 1)','rgba(255, 97, 8, 1)','rgba(255, 104, 255, 1)','rgba(83, 50, 168, 1)'],
+                borderWidth: 1,
+            }]
+        }
+        const outcomeOptions = {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                    color: '#444444',
+                    'font.weight': 'bold',
+                    formatter: (value, ctx) => {
+                        let sum = 0;
+                        let dataArr = ctx.chart.data.datasets[0].data;
+                        dataArr.map(data => {
+                            sum += data;
+                        });
+                        let percentage = (value * 100 / sum).toFixed(0) + "%";
+                        if (percentage === '0%' || percentage === 'NaN%') {
+                            return '';
+                        } else {
+                            return percentage;
+                        }
+                    },
+                },
+            }
+        }
+
+        const outcomeChart = new Chart(outcomeChartCtx, {
+            type: 'doughnut',
+            data: outcomeData,
+            options: outcomeOptions,
+            plugins: [
+                {
+                    id: 'text',
+                    beforeDraw: function (chart, a, b) {
+                        var width = chart.width,
+                            height = chart.height,
+                            ctx = chart.ctx;
+
+                        ctx.restore();
+                        var fontSize = (height / 200).toFixed(1);
+                        ctx.font = fontSize + "em sans-serif";
+                        ctx.textBaseline = "middle";
+
+                        var text = "100%"
+                        textX = 10 + Math.round((width - ctx.measureText(text).width) / 2);
+                        textY = (height / 2) - 40;
+
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }]
+        });
+
+        function clickHandler(click) {
+            const points = outcomeChart.getElementsAtEventForMode(click, 'nearest', {intersect: true}, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                window.open(outcomeDetailsReports[firstPoint.index].link, "_self")
+
+            }
+        }
+        outcomeChartCtx.onclick = clickHandler;
+    </script>
+    <!-- END PIE CHART -->
+
+    <!-- SUMMARY BAR CHART -->
+    <script>
+
+        // The Severity bar chart
+        const severityChartCtx = document.getElementById('severityChart');
+
+        // Options define for display value on top of bars
+
+        const severityDetailsReports = [
+            { title: 'Passing Scenarios', link: "01f5288b80adbd3af52a8ed68a4a616d3164f750229f80da1ef344382d948835.html" },
+            { title: 'Pending Scenarios', link: "bde4fca42ca8baa0fe2eac76a241c84327dfe4ca903a1daa7cae83a1035d4745.html" },
+            { title: 'Ignored Scenarios', link: "c1b352893c3d69e59317fd825f20a75f987a859afe98fb4434f47dce70c48fd4.html" },
+            { title: 'Skipped Scenarios', link: "7409dbb9985b960343780b303d8028480bd55e9aebd855c90eff0a000e21ccc8.html" },
+            { title: 'Aborted Scenarios',  link: "91152e032be7fe762aa6823d6424278e2c72efeb7622a5e63c7bf5980b4fd8a0.html"},
+            { title: 'Failed Scenarios', link: "da5b0c51b332adf0ef993a9f086d6a1b51a3d800248ec6ae281212092f35bd37.html"  },
+            { title: 'Broken Scenarios', link: "c8a926210aeff57f8aa7ea799262d4b730915a909cd5ecd6a705b1fa13bc7aa8.html"    },
+            { title: 'Compromised Scenarios',  link: "02dd8f8ada4c10b8ebb5c1f309605a6f7c147adc21bcf5c55829855ba045ff03.html" },
+        ]
+        const severityData = {
+            labels: ['Passing', 'Pending', 'Ignored', 'Skipped', 'Aborted', 'Failed', 'Broken', 'Compromised'],
+            datasets: [
+                {
+                    label: 'Automated',
+                    data: [45,0,0,0,0,0,0,0],
+                    backgroundColor: ['rgba(153,204,51,0.5)','rgba(165, 199, 238, 0.5)','rgba(168, 168, 168, 0.5)','rgba(238, 224, 152, 0.75)','rgba(255, 153, 102, 0.5)','rgba(255, 22, 49, 0.5)','rgba(255, 97, 8, 0.5)','rgba(255, 104, 255, 0.5)','rgba(83, 50, 168, 0.5)'],
+                    borderColor: ['rgba(153,204,51,1)','rgba(165, 199, 238, 1)','rgba(168, 168, 168, 1)','rgba(238, 224, 152, 1)','rgba(255, 153, 102, 1)','rgba(255, 22, 49, 1)','rgba(255, 97, 8, 1)','rgba(255, 104, 255, 1)','rgba(83, 50, 168, 1)'],
+                    borderWidth: 1
+                },
+                {
+                    label: 'Manual',
+                    data: [0,0,0,0,0,0,0,0],
+                    backgroundColor: ['rgba(153,204,51,0.25)','rgba(165, 199, 238, 0.25)','rgba(168, 168, 168, 0.25)','rgba(238, 224, 152, 0.375)','rgba(255, 153, 102, 0.25)','rgba(255, 22, 49, 0.25)','rgba(255, 97, 8, 0.25)','rgba(255, 104, 255, 0.25)','rgba(83, 50, 168, 0.25)'],
+                    borderColor: ['rgba(153,204,51,1)','rgba(165, 199, 238, 1)','rgba(168, 168, 168, 1)','rgba(238, 224, 152, 1)','rgba(255, 153, 102, 1)','rgba(255, 22, 49, 1)','rgba(255, 97, 8, 1)','rgba(255, 104, 255, 1)','rgba(83, 50, 168, 1)'],
+                    borderWidth: 1
+                },
+
+            ]
+        }
+        const severityOptions = {
+            responsive: true,
+            skipNull: true,
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
+                }
+            },
+            plugins: {
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                    color: '#444444',
+                    'font.weight': 'bold',
+                    formatter: (value, ctx) => {
+                        if (value === 0) {
+                            return '';
+                        } else {
+                            return value;
+                        }
+                    },
+                }
+            }
+        }
+        const severityChart = new Chart(severityChartCtx, {
+            type: 'bar',
+            data: severityData,
+            options: severityOptions
+        });
+
+        function clickHandler(click) {
+            const points = severityChart.getElementsAtEventForMode(click, 'nearest', {intersect: true}, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                window.open(severityDetailsReports[firstPoint.index].link, "_self")
+
+            }
+        }
+        severityChartCtx.onclick = clickHandler;
+    </script>
+    <!-- END SUMMARY CHART -->
+
+    <!-- DURATION CHART -->
+    <script>
+
+        // Options define for display value on top of bars
+        const durationDetailsReports = [
+                {title: "Under 1 second", link: "2a5b6a7be0f08df02d8ab0b4d4c68648c2695c6c7ef0658c71de4d42b1415b18.html"},
+                {title: "1 to 10 seconds", link: "6c5512236937b92cd7a296b24edb966c2bd94be46b8910f8b129a42d6150eb25.html"},
+                {title: "10 to 30 seconds", link: "34658a1663fcf042bd7acb3325affbe4e647c8acd84d0228be2f52e1381e61b9.html"},
+                {title: "30 to 60 seconds", link: "5698da923f295f46ce5ab64ced2311fc60caa4e36b32112606d3adcfdce3f60b.html"},
+                {title: "1 to 2 minutes", link: "c68fd6639ab29c4b0ac02a78bc39f4e22557bcaa40ef14c903ac0e584626edfe.html"},
+                {title: "2 to 5 minutes", link: "3ce388ea8511800032930896a3e5ba2c4f80e46f1a10b143b67009baf212c6a0.html"},
+                {title: "5 to 10 minutes", link: "376e1536bb68812a880e84ca7a0c6d104d541788793f22a36b4462a6a9aaa344.html"},
+                {title: "10 minutes or over", link: "24bba6f5cf4f06c7d46bf8990b86c4fbc1ce4ce201644ddf42661c84031e1c90.html"},
+        ]
+        // The Severity bar chart
+        const durationChartCtx = document.getElementById('durationChart');
+
+        // Options define for display value on top of bars
+
+        const durationData = {
+            labels: ['Under 1 second','1 to 10 seconds','10 to 30 seconds','30 to 60 seconds','1 to 2 minutes','2 to 5 minutes','5 to 10 minutes','10 minutes or over'],
+            datasets: [{
+                label: 'Number of tests per duration',
+                fill: false,
+                data: ['45','0','0','0','0','0','0','0'],
+                backgroundColor: 'rgba(83, 146, 255,0.5)',
+                borderColor: 'rgba(83, 146, 255, 1)',
+            }]
+        }
+        const durationOptions = {
+            responsive: true,
+            plugins: {
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                    color: '#444444',
+                    'font.weight': 'bold',
+                    formatter: (value, ctx) => {
+                        if (value > 0) {
+                            return value;
+                        } else {
+                            return '';
+                        }
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    usePointStyle: true,
+                    callbacks: {
+                        label: (data) => {
+                            return data.parsed.y + ' tests'
+                        }
+                    },
+                },
+            },
+        }
+
+        const durationChart = new Chart(durationChartCtx, {
+            type: 'bar',
+            data: durationData,
+            options: durationOptions
+        });
+
+        function durationClickHandler(click) {
+            const points = durationChart.getElementsAtEventForMode(click, 'nearest', {intersect: true}, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                window.open(durationDetailsReports[firstPoint.index].link, "_self")
+
+            }
+        }
+
+        durationChartCtx.onclick = durationClickHandler;
+    </script>
+    <!-- END DURATION CHART -->
+
+
+</body>
+</html>
